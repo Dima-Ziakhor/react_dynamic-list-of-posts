@@ -1,37 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './PostsList.scss';
 
-export const PostsList: React.FC = () => (
-  <div className="PostsList">
-    <h2>Posts:</h2>
+type Props = {
+  // getUserPosts(selectedUserId?: number): Promise<Post[]>;
+  userPosts: Post[] | null;
+  setSelectedPostId(id: number): void;
+  selectedPostId: number;
+};
 
-    <ul className="PostsList__list">
-      <li className="PostsList__item">
-        <div>
-          <b>[User #1]: </b>
-          sunt aut facere repellat provident occaecati excepturi optio
-        </div>
-        <button
-          type="button"
-          className="PostsList__button button"
-        >
-          Close
-        </button>
-      </li>
+export const PostsList: React.FC<Props> = ({ userPosts, setSelectedPostId, selectedPostId }) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-      <li className="PostsList__item">
-        <div>
-          <b>[User #2]: </b>
-          et ea vero quia laudantium autem
-        </div>
+  const onClickHandle = (id: number) => {
+    if (selectedPostId === id) {
+      setSelectedPostId(0);
+      setIsOpen(current => !current);
+    } else {
+      setSelectedPostId(id);
+      setIsOpen(true);
+    }
+  };
 
-        <button
-          type="button"
-          className="PostsList__button button"
-        >
-          Open
-        </button>
-      </li>
-    </ul>
-  </div>
-);
+  return (
+    <div className="PostsList">
+      <h2>Posts:</h2>
+
+      <ul className="PostsList__list">
+        {
+          userPosts && (
+            userPosts.map(({ userId, title, id }) => (
+              <li className="PostsList__item" key={id}>
+                <div>
+                  <b>
+                    [User #
+                    {userId}
+                    ]:
+                  </b>
+                  {title}
+                </div>
+
+                <button
+                  type="button"
+                  className="PostsList__button button"
+                  onClick={() => onClickHandle(id)}
+                >
+                  {(isOpen && selectedPostId === id) ? 'Close' : 'Open'}
+                </button>
+              </li>
+            ))
+          )
+        }
+      </ul>
+    </div>
+  );
+};

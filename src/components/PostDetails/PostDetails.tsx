@@ -1,45 +1,97 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NewCommentForm } from '../NewCommentForm';
+import { Loader } from '../Loader';
 import './PostDetails.scss';
 
-export const PostDetails: React.FC = () => (
-  <div className="PostDetails">
-    <h2>Post details:</h2>
+type Props = {
+  postDetails: Post | null;
+  comments: UserComment[];
+  handleDeleteComment(commentId: number): void;
+  lastCommentId: number;
+  handleSubmit(event: React.SyntheticEvent, comment: UserComment): void;
+};
 
-    <section className="PostDetails__post">
-      <p>sunt aut facere repellat provident occaecati excepturi optio</p>
-    </section>
+export const PostDetails: React.FC<Props> = ({
+  postDetails, comments, handleDeleteComment, lastCommentId, handleSubmit,
+}) => {
+  const [isHide, setIsHide] = useState(true);
 
-    <section className="PostDetails__comments">
-      <button type="button" className="button">Hide 2 comments</button>
+  return (
+    <>
+      {
+        !comments.length && (
+          <Loader />
+        )
+      }
 
-      <ul className="PostDetails__list">
-        <li className="PostDetails__list-item">
-          <button
-            type="button"
-            className="PostDetails__remove-button button"
-          >
-            X
-          </button>
-          <p>My first comment</p>
-        </li>
+      {
+        comments.length && postDetails && (
+          <div className="PostDetails">
+            <h2>
+              Post details:
+            </h2>
 
-        <li className="PostDetails__list-item">
-          <button
-            type="button"
-            className="PostDetails__remove-button button"
-          >
-            X
-          </button>
-          <p>sad sds dfsadf asdf asdf</p>
-        </li>
-      </ul>
-    </section>
+            <section className="PostDetails__post">
+              <p>{postDetails.body}</p>
+            </section>
 
-    <section>
-      <div className="PostDetails__form-wrapper">
-        <NewCommentForm />
-      </div>
-    </section>
-  </div>
-);
+            <section className="PostDetails__comments">
+              <button
+                type="button"
+                className="button"
+                onClick={() => setIsHide(prev => !prev)}
+              >
+                {
+                  !comments.length && (
+                    <>
+                      No comments
+                    </>
+                  )
+                }
+                {
+                  !!comments.length && (
+                    <>
+                      {!isHide ? 'Hide ' : 'Show '}
+                      {comments?.length}
+                      {' '}
+                      comments
+                    </>
+                  )
+                }
+              </button>
+
+              <ul className="PostDetails__list">
+                {
+                  !isHide && (
+                    comments.map(({ id, body }) => (
+                      <li key={id} className="PostDetails__list-item">
+                        <button
+                          type="button"
+                          className="PostDetails__remove-button button"
+                          onClick={() => handleDeleteComment(id)}
+                        >
+                          X
+                        </button>
+                        <p>{body}</p>
+                      </li>
+                    ))
+                  )
+                }
+              </ul>
+            </section>
+
+            <section>
+              <div className="PostDetails__form-wrapper">
+                <NewCommentForm
+                  lastCommentId={lastCommentId}
+                  handleSubmit={handleSubmit}
+                  postId={postDetails.id}
+                />
+              </div>
+            </section>
+          </div>
+        )
+      }
+    </>
+  );
+};
