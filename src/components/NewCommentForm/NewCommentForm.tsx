@@ -12,15 +12,21 @@ export const NewCommentForm: React.FC<Props> = ({ lastCommentId, handleSubmit, p
   const [email, setEmail] = useState<string>('');
   const [userMessage, setUserMessage] = useState<string>('');
 
-  const commentBuilder = (): UserComment => ({
-    id: lastCommentId,
-    postId,
-    name,
-    email,
-    body: userMessage,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
+  const commentBuilder = (): UserComment => {
+    setName('');
+    setEmail('');
+    setUserMessage('');
+
+    return {
+      id: lastCommentId,
+      postId,
+      name,
+      email,
+      body: userMessage,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+  };
 
   return (
     <form className="NewCommentForm" onSubmit={(event) => handleSubmit(event, commentBuilder())}>
@@ -38,7 +44,7 @@ export const NewCommentForm: React.FC<Props> = ({ lastCommentId, handleSubmit, p
       <div className="form-field">
         <input
           value={email}
-          type="text"
+          type="email"
           name="email"
           placeholder="Your email"
           className="NewCommentForm__input"
