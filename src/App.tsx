@@ -29,8 +29,6 @@ const App: React.FC = () => {
     );
     setComments(prev => ([...prev, comment]));
     addPostComment(comment);
-    // eslint-disable-next-line no-console
-    console.log(lastCommentId);
   };
 
   useEffect(() => {
@@ -77,9 +75,9 @@ const App: React.FC = () => {
           />
         </div>
 
-        <div className="App__content">
-          {
-            !!selectedPostId && (
+        {
+          !!selectedPostId && (
+            <div className="App__content">
               <PostDetails
                 postDetails={postDetails}
                 comments={comments}
@@ -87,9 +85,9 @@ const App: React.FC = () => {
                 lastCommentId={lastCommentId}
                 handleSubmit={handleSubmit}
               />
-            )
-          }
-        </div>
+            </div>
+          )
+        }
       </main>
     </div>
   );

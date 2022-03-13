@@ -25,7 +25,7 @@ export const PostDetails: React.FC<Props> = ({
       }
 
       {
-        comments.length && postDetails && (
+        !!comments.length && postDetails && (
           <div className="PostDetails">
             <h2>
               Post details:

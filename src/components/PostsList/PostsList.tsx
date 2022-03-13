@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import './PostsList.scss';
 
 type Props = {
-  // getUserPosts(selectedUserId?: number): Promise<Post[]>;
   userPosts: Post[] | null;
   setSelectedPostId(id: number): void;
   selectedPostId: number;
 };
 
-export const PostsList: React.FC<Props> = ({ userPosts, setSelectedPostId, selectedPostId }) => {
+export const PostsList: React.FC<Props> = ({
+  userPosts, setSelectedPostId, selectedPostId,
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onClickHandle = (id: number) => {
@@ -29,24 +30,26 @@ export const PostsList: React.FC<Props> = ({ userPosts, setSelectedPostId, selec
         {
           userPosts && (
             userPosts.map(({ userId, title, id }) => (
-              <li className="PostsList__item" key={id}>
-                <div>
-                  <b>
-                    [User #
-                    {userId}
-                    ]:
-                  </b>
-                  {title}
-                </div>
+              userId && (
+                <li className="PostsList__item" key={id}>
+                  <div>
+                    <b>
+                      [User #
+                      {userId}
+                      ]:
+                    </b>
+                    {title}
+                  </div>
 
-                <button
-                  type="button"
-                  className="PostsList__button button"
-                  onClick={() => onClickHandle(id)}
-                >
-                  {(isOpen && selectedPostId === id) ? 'Close' : 'Open'}
-                </button>
-              </li>
+                  <button
+                    type="button"
+                    className="PostsList__button button"
+                    onClick={() => onClickHandle(id)}
+                  >
+                    {(isOpen && selectedPostId === id) ? 'Close' : 'Open'}
+                  </button>
+                </li>
+              )
             ))
           )
         }
